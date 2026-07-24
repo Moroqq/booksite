@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\every\\\\.claude\" -Recurse -ErrorAction SilentlyContinue | Where-Object { $_.Extension -match '\\\\.\\(jpg|jpeg|png|webp\\)' } | Sort-Object LastWriteTime -Descending | Select-Object -First 10 FullName, LastWriteTime)",
+      "PowerShell(Rename-Item \"d:\\\\WEBSITEBOOK\\\\salesbook\\\\public\\\\images\\\\1.png\" \"book-cover.png\")"
+    ]
+  }
+}
