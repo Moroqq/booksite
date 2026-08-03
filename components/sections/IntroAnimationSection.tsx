@@ -51,7 +51,7 @@ export default function IntroAnimationSection() {
   }, []);
 
   return (
-    <section aria-hidden="true" className="w-full pt-16 md:pt-20 flex justify-center bg-white">
+    <section aria-hidden="true" className="w-full pt-16 md:pt-20 flex justify-center bg-[var(--intro-bg)]">
       <canvas
         ref={canvasRef}
         style={{ display: "block", width: "50%", height: "auto" }}

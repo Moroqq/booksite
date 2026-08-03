@@ -3,7 +3,7 @@ import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import FadeSection from "@/components/ui/FadeSection";
-import { ARTICLES } from "@/lib/articles";
+import { getPublishedArticles } from "@/lib/articles-db";
 
 export const metadata: Metadata = {
   title: "Статьи о духовной звукотерапии — практики и размышления",
@@ -18,6 +18,7 @@ function formatDate(dateStr: string) {
 }
 
 export default function BlogPage() {
+  const articles = getPublishedArticles();
   return (
     <>
       <Header />
@@ -35,7 +36,7 @@ export default function BlogPage() {
             </FadeSection>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {ARTICLES.map((article, i) => (
+              {articles.map((article, i) => (
                 <FadeSection key={article.slug} delay={i * 80}>
                   <article className="group flex flex-col h-full">
                     <Link href={`/blog/${article.slug}`} className="block">
@@ -69,6 +70,9 @@ export default function BlogPage() {
                 </FadeSection>
               ))}
             </div>
+            {articles.length === 0 && (
+              <p className="font-inter text-[var(--ink-soft)]">Опубликованных статей пока нет.</p>
+            )}
           </div>
         </section>
       </main>

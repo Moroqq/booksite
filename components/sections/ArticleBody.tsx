@@ -175,7 +175,7 @@ export default function ArticleBody({ article }: { article: Article }) {
             </div>
             <div className="flex gap-3 flex-shrink-0">
               <Link
-                href="/book#order"
+                href="/book/order"
                 className="btn-gold font-inter text-xs uppercase tracking-widest px-5 py-2.5 rounded-full"
               >
                 Книга

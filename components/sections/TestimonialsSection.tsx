@@ -5,8 +5,7 @@ export default function TestimonialsSection() {
   return (
     <section
       data-theme="dark"
-      className="section-padding"
-      style={{ background: "linear-gradient(135deg, #2dd4bf 0%, #047857 100%)" }}
+      className="section-padding bg-[var(--bg-deep)]"
       aria-labelledby="testimonials-heading"
     >
       <div className="container-layout">

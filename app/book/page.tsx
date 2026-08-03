@@ -2,30 +2,12 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { ChevronDown, Truck, Package, MapPin } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import FadeSection from "@/components/ui/FadeSection";
 import Button from "@/components/ui/Button";
 import { BOOK_INFO, QUOTES, TESTIMONIALS } from "@/lib/content";
-
-const DELIVERY_OPTIONS = [
-  {
-    icon: <Truck size={28} aria-hidden="true" />,
-    title: "СДЭК",
-    description: "Доставка по всей России. Сроки и стоимость рассчитываются при оформлении заказа.",
-  },
-  {
-    icon: <Package size={28} aria-hidden="true" />,
-    title: "Яндекс Доставка",
-    description: "Курьерская доставка по Москве и Санкт-Петербургу.",
-  },
-  {
-    icon: <MapPin size={28} aria-hidden="true" />,
-    title: "Самовывоз",
-    description: "Санкт-Петербург. Точный адрес уточняется при оформлении заказа.",
-  },
-];
 
 function TocAccordion() {
   const [open, setOpen] = useState(false);
@@ -114,7 +96,7 @@ export default function BookPage() {
               <FadeSection delay={250}>
                 <div className="mt-8 flex items-center gap-4">
                   <span className="font-cormorant text-4xl text-[var(--gold)]">{BOOK_INFO.priceFormatted}</span>
-                  <Button href="#order" variant="gold">Купить</Button>
+                  <Button href="/book/order" variant="gold">Купить</Button>
                 </div>
               </FadeSection>
             </div>
@@ -202,54 +184,6 @@ export default function BookPage() {
           </div>
         </section>
 
-        {/* How to order */}
-        <section id="order" data-theme="dark" className="section-padding bg-[var(--bg-deep)]" aria-labelledby="order-heading">
-          <div className="container-layout max-w-3xl">
-            <FadeSection className="mb-10 text-center">
-              <p className="font-inter text-xs uppercase tracking-[0.2em] text-[var(--gold)] mb-4">Как заказать</p>
-              <h2
-                id="order-heading"
-                className="font-cormorant font-light text-[var(--text-on-dark)]"
-                style={{ fontSize: "clamp(1.8rem, 3.5vw, 2.5rem)" }}
-              >
-                Купить книгу
-              </h2>
-              <p className="font-inter text-[var(--text-on-dark-soft)] mt-3 max-w-lg mx-auto">
-                Напишите нам на{" "}
-                <a
-                  href="mailto:dorhoutmees.book@gmail.com"
-                  className="text-[var(--gold)] link-underline"
-                >
-                  dorhoutmees.book@gmail.com
-                </a>{" "}
-                — ответим в течение 24 часов и согласуем доставку.
-              </p>
-            </FadeSection>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-10">
-              {DELIVERY_OPTIONS.map((opt, i) => (
-                <FadeSection key={opt.title} delay={i * 80}>
-                  <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-[var(--gold)]/40 transition-colors duration-300 h-full flex flex-col gap-4">
-                    <span className="text-[var(--gold)]">{opt.icon}</span>
-                    <h3 className="font-cormorant text-xl font-medium text-[var(--text-on-dark)]">{opt.title}</h3>
-                    <p className="font-inter text-sm text-[var(--text-on-dark-soft)] leading-relaxed">
-                      {opt.description}
-                    </p>
-                  </div>
-                </FadeSection>
-              ))}
-            </div>
-
-            <FadeSection delay={260} className="text-center">
-              <a
-                href="mailto:dorhoutmees.book@gmail.com"
-                className="btn-gold font-inter text-sm uppercase tracking-widest px-8 py-4 rounded-full inline-block"
-              >
-                Написать и заказать · {BOOK_INFO.priceFormatted}
-              </a>
-            </FadeSection>
-          </div>
-        </section>
       </main>
       <Footer />
     </>

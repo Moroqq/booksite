@@ -3,10 +3,10 @@ import { notFound } from "next/navigation";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import ArticleBody from "@/components/sections/ArticleBody";
-import { ARTICLES, getArticleBySlug } from "@/lib/articles";
+import { getPublishedArticleBySlug, getPublishedArticles } from "@/lib/articles-db";
 
 export function generateStaticParams() {
-  return ARTICLES.map((a) => ({ slug: a.slug }));
+  return getPublishedArticles().map((a) => ({ slug: a.slug }));
 }
 
 export async function generateMetadata({
@@ -14,7 +14,7 @@ export async function generateMetadata({
 }: {
   params: { slug: string };
 }): Promise<Metadata> {
-  const article = getArticleBySlug(params.slug);
+  const article = getPublishedArticleBySlug(params.slug);
   if (!article) return {};
   return {
     title: article.title,
@@ -23,7 +23,7 @@ export async function generateMetadata({
 }
 
 export default function ArticlePage({ params }: { params: { slug: string } }) {
-  const article = getArticleBySlug(params.slug);
+  const article = getPublishedArticleBySlug(params.slug);
   if (!article) notFound();
 
   return (
@@ -36,3 +36,5 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
     </>
   );
 }
+
+export const dynamic = "force-dynamic";

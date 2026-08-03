@@ -72,7 +72,7 @@ export default function Hero() {
           className="flex flex-wrap items-center justify-center gap-4 opacity-0"
           style={mounted ? { animation: "fadeUp 1s cubic-bezier(0.22,1,0.36,1) 1.4s forwards" } : {}}
         >
-          <Button href="/book#order" variant="gold">
+          <Button href="/book/order" variant="gold">
             Купить книгу
           </Button>
           <Button href="/seminars" variant="ghost">

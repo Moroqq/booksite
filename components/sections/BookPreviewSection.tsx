@@ -7,8 +7,7 @@ export default function BookPreviewSection() {
   return (
     <section
       data-theme="dark"
-      className="section-padding"
-      style={{ background: "linear-gradient(135deg, #2dd4bf 0%, #047857 100%)" }}
+      className="section-padding bg-[var(--bg-deep)]"
       aria-labelledby="book-preview-heading"
     >
       <div className="container-layout">
@@ -79,7 +78,7 @@ export default function BookPreviewSection() {
                 </span>
               </div>
               <div className="flex flex-wrap gap-4">
-                <Button href="/book#order" variant="gold">
+                <Button href="/book/order" variant="gold">
                   Купить книгу
                 </Button>
                 <Button href="/book" variant="dark">

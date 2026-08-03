@@ -1,0 +1,17 @@
+import type { Seminar } from "@/lib/seminars";
+
+const input = "w-full rounded-xl border border-[var(--line)] bg-white/70 px-4 py-2.5 font-inter text-sm text-[var(--ink)] focus:border-[var(--gold)] focus:outline-none";
+const label = "mb-1.5 block font-inter text-xs uppercase tracking-wider text-[var(--ink-soft)]";
+
+export default function SeminarForm({ seminar, action, submit }: { seminar?: Seminar; action: (data: FormData) => void | Promise<void>; submit: string }) {
+  return <form action={action} className="space-y-5 rounded-2xl border border-[var(--line)] bg-white/60 p-6 sm:p-8">
+    {seminar && <input type="hidden" name="id" value={seminar.id} />}
+    <div><label className={label} htmlFor="title">Заголовок *</label><input id="title" className={input} name="title" defaultValue={seminar?.title} required /></div>
+    <div><label className={label} htmlFor="description">Введение *</label><textarea id="description" className={input} name="description" rows={3} defaultValue={seminar?.description} required /></div>
+    <div className="grid gap-5 sm:grid-cols-2"><div><label className={label} htmlFor="format">Тип *</label><select id="format" className={input} name="format" defaultValue={seminar?.format || "Очный"}><option>Очный</option><option>Онлайн</option><option>Выездной</option></select></div><div><label className={label} htmlFor="location">Место *</label><input id="location" className={input} name="location" defaultValue={seminar?.location} required /></div></div>
+    <div className="grid gap-5 sm:grid-cols-3"><div><label className={label} htmlFor="dateStart">Дата начала *</label><input id="dateStart" type="date" className={input} name="dateStart" defaultValue={seminar?.dateStart} required /></div><div><label className={label} htmlFor="dateEnd">Дата окончания *</label><input id="dateEnd" type="date" className={input} name="dateEnd" defaultValue={seminar?.dateEnd} required /></div><div><label className={label} htmlFor="duration">Формат / длительность *</label><input id="duration" className={input} name="duration" defaultValue={seminar?.duration} placeholder="3 дня" required /></div></div>
+    <div className="grid gap-5 sm:grid-cols-2"><div><label className={label} htmlFor="instructor">Ведущий *</label><input id="instructor" className={input} name="instructor" defaultValue={seminar?.instructor || "Татьяна Рожукене-Дорхаут Мэйс"} required /></div><div><label className={label} htmlFor="price">Стоимость, ₽ *</label><input id="price" type="number" min="0" className={input} name="price" defaultValue={seminar?.price} required /></div></div>
+    <div className="grid gap-5 sm:grid-cols-3"><div><label className={label} htmlFor="spots">Всего мест *</label><input id="spots" type="number" min="0" className={input} name="spots" defaultValue={seminar?.spots} required /></div><div><label className={label} htmlFor="spotsLeft">Свободно мест *</label><input id="spotsLeft" type="number" min="0" className={input} name="spotsLeft" defaultValue={seminar?.spotsLeft} required /></div><div><label className={label} htmlFor="forWhom">Для кого</label><input id="forWhom" className={input} name="forWhom" defaultValue={seminar?.forWhom.join(", ")} placeholder="Педагоги, родители" /></div></div>
+    <button className="btn-gold rounded-full px-6 py-3 font-inter text-xs uppercase tracking-widest">{submit}</button>
+  </form>;
+}

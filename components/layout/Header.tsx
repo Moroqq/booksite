@@ -9,6 +9,7 @@ import { Menu, X } from "lucide-react";
 const NAV_LINKS = [
   { href: "/", label: "Главная" },
   { href: "/book", label: "Книга" },
+  { href: "/orders", label: "Мои заказы" },
   { href: "/method", label: "Метод" },
   { href: "/seminars", label: "Семинары" },
   { href: "/about", label: "Об авторах" },
@@ -81,7 +82,7 @@ export default function Header() {
             );
           })}
           <Link
-            href="/book#order"
+            href="/book/order"
             className="btn-gold font-inter text-sm uppercase tracking-widest px-5 py-2.5 rounded-full transition-all duration-300"
           >
             Купить книгу
@@ -133,7 +134,7 @@ export default function Header() {
                 </motion.div>
               ))}
               <Link
-                href="/book#order"
+                href="/book/order"
                 className="btn-gold mt-4 font-inter text-sm uppercase tracking-widest px-6 py-3 rounded-full text-center w-fit transition-all duration-300"
               >
                 Купить книгу
