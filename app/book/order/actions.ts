@@ -2,7 +2,6 @@
 
 import { revalidatePath } from "next/cache";
 import { createBookOrder } from "@/lib/orders-db";
-import { rememberCustomerOrder } from "@/lib/customer-orders";
 
 export type OrderSubmission = {
   firstName: string;
@@ -16,6 +15,7 @@ export type OrderSubmission = {
 };
 
 const clean = (value: string) => value.trim();
+const isPhoneComplete = (value: string) => value.replace(/\D/g, "").length === 11;
 
 export async function submitOfflineBookOrder(input: OrderSubmission) {
   const firstName = clean(input.firstName);
@@ -26,8 +26,11 @@ export async function submitOfflineBookOrder(input: OrderSubmission) {
   const address = clean(input.address);
   const quantity = Number(input.quantity);
 
-  if (!firstName || !lastName || !email || !phone || !deliveryMethod || !address || !Number.isInteger(quantity) || quantity < 1 || quantity > 10) {
+  if (!firstName || !lastName || !email || !deliveryMethod || !address || !Number.isInteger(quantity) || quantity < 1 || quantity > 10) {
     return { ok: false, message: "Пожалуйста, заполните обязательные поля и проверьте количество книг." };
+  }
+  if (!isPhoneComplete(phone)) {
+    return { ok: false, message: "Введите номер телефона полностью, например +7 999 000-00-00." };
   }
 
   const order = createBookOrder({
@@ -35,8 +38,6 @@ export async function submitOfflineBookOrder(input: OrderSubmission) {
     delivery: { method: deliveryMethod, address, comment: clean(input.comment || "") || undefined },
     quantity,
   });
-  rememberCustomerOrder(order.id);
-  revalidatePath("/orders");
   revalidatePath("/admin");
   revalidatePath("/admin/orders");
   return { ok: true, number: order.number };

@@ -4,10 +4,9 @@
  * Не храните здесь ключи, токены или данные банковской карты.
  */
 export const OFFLINE_PAYMENT = {
-  recipient: "",
-  details: "",
-  qrCodeSrc: "",
-  instruction: "После перевода вернитесь на эту страницу и нажмите «Я оплатил». Мы проверим поступление вручную.",
+  phone: "+7 921 630-77-04",
+  bank: "Сбербанк (СБП)",
+  qrCodeSrc: "/payment-qr.jpg",
 } as const;
 
-export const hasOfflinePaymentDetails = Boolean(OFFLINE_PAYMENT.recipient || OFFLINE_PAYMENT.details || OFFLINE_PAYMENT.qrCodeSrc);
+export const hasOfflinePaymentDetails = Boolean(OFFLINE_PAYMENT.phone || OFFLINE_PAYMENT.qrCodeSrc);

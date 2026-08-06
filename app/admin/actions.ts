@@ -19,7 +19,7 @@ function revalidateContent() {
 }
 
 function revalidateOrders() {
-  ["/admin", "/admin/orders", "/orders"].forEach((path) => revalidatePath(path));
+  ["/admin", "/admin/orders"].forEach((path) => revalidatePath(path));
 }
 
 function text(formData: FormData, field: string) {
@@ -54,15 +54,14 @@ function seminarInput(formData: FormData): SeminarInput | null {
   return { title, location, dateStart, dateEnd, duration, instructor, description, price, spots, spotsLeft, format, forWhom: forWhom.length ? forWhom : ["Все желающие"] };
 }
 
-export async function loginAction(formData: FormData) {
-  if (!verifyPassword(text(formData, "password"))) redirect("/admin/login?error=1");
+export async function loginAction(formData: FormData): Promise<{ ok: boolean }> {
+  if (!verifyPassword(text(formData, "password"))) return { ok: false };
   setSession();
-  redirect("/admin");
+  return { ok: true };
 }
 
 export async function logoutAction() {
   clearSession();
-  redirect("/admin/login");
 }
 
 export async function createArticleAction(formData: FormData) {

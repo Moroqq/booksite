@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { isAuthed } from "@/lib/admin-auth";
-import { loginAction } from "@/app/admin/actions";
+import LoginForm from "@/components/admin/LoginForm";
 
 export const metadata: Metadata = {
   title: "Вход в админку",
@@ -10,15 +10,8 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
-export default function AdminLoginPage({
-  searchParams,
-}: {
-  searchParams: { error?: string };
-}) {
+export default function AdminLoginPage() {
   if (isAuthed()) redirect("/admin");
-
-  const inputClass =
-    "w-full font-inter text-sm bg-white/70 border border-[var(--line)] rounded-xl px-4 py-3 text-[var(--ink)] placeholder:text-[var(--ink-soft)]/50 focus:outline-none focus:border-[var(--gold)] transition-colors duration-300";
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-[var(--bg)] px-4">
@@ -33,27 +26,7 @@ export default function AdminLoginPage({
           Вход в админку
         </h1>
 
-        <form action={loginAction} className="space-y-4">
-          <input
-            name="password"
-            type="password"
-            placeholder="Пароль"
-            autoFocus
-            className={inputClass}
-            aria-label="Пароль"
-          />
-          {searchParams.error && (
-            <p className="font-inter text-xs text-[var(--rose-color)] text-center">
-              Неверный пароль.
-            </p>
-          )}
-          <button
-            type="submit"
-            className="btn-gold w-full font-inter text-sm uppercase tracking-widest rounded-full px-6 py-3 transition-all duration-300"
-          >
-            Войти
-          </button>
-        </form>
+        <LoginForm />
       </div>
     </main>
   );

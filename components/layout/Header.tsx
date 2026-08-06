@@ -9,7 +9,6 @@ import { Menu, X } from "lucide-react";
 const NAV_LINKS = [
   { href: "/", label: "Главная" },
   { href: "/book", label: "Книга" },
-  { href: "/orders", label: "Мои заказы" },
   { href: "/method", label: "Метод" },
   { href: "/seminars", label: "Семинары" },
   { href: "/about", label: "Об авторах" },
