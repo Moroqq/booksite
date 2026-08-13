@@ -74,9 +74,11 @@ export default function SeminarsPage() {
                           <span className="font-inter text-xs uppercase tracking-wider text-[var(--ink-soft)]/50 w-20">Место</span>
                           <span className="font-inter text-sm text-[var(--ink-soft)]">{seminar.location}</span>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <span className="font-inter text-xs uppercase tracking-wider text-[var(--ink-soft)]/50 w-20">Даты</span>
-                          <span className="font-inter text-sm text-[var(--ink-soft)]">{formatDate(seminar.dateStart)} — {formatDate(seminar.dateEnd)}</span>
+                        <div className="flex items-start gap-2">
+                          <span className="font-inter text-xs uppercase tracking-wider text-[var(--ink-soft)]/50 w-20 pt-0.5">Даты</span>
+                          <span className="font-inter text-sm text-[var(--ink-soft)]">
+                            {seminar.sessionDates?.length ? seminar.sessionDates.join(", ") : `${formatDate(seminar.dateStart)} — ${formatDate(seminar.dateEnd)}`}
+                          </span>
                         </div>
                         <div className="flex items-center gap-2">
                           <span className="font-inter text-xs uppercase tracking-wider text-[var(--ink-soft)]/50 w-20">Формат</span>

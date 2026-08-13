@@ -50,8 +50,9 @@ function seminarInput(formData: FormData): SeminarInput | null {
   const rawFormat = text(formData, "format");
   const format = FORMATS.includes(rawFormat as SeminarFormat) ? rawFormat as SeminarFormat : "Очный";
   const forWhom = text(formData, "forWhom").split(",").map((value) => value.trim()).filter(Boolean);
+  const sessionDates = text(formData, "sessionDates").split("\n").map((value) => value.trim()).filter(Boolean);
   if (!title || !location || !dateStart || !dateEnd || !duration || !instructor || !description || !Number.isFinite(price) || price < 0 || !Number.isFinite(spots) || spots < 0 || !Number.isFinite(spotsLeft) || spotsLeft < 0) return null;
-  return { title, location, dateStart, dateEnd, duration, instructor, description, price, spots, spotsLeft, format, forWhom: forWhom.length ? forWhom : ["Все желающие"] };
+  return { title, location, dateStart, dateEnd, sessionDates: sessionDates.length ? sessionDates : undefined, duration, instructor, description, price, spots, spotsLeft, format, forWhom: forWhom.length ? forWhom : ["Все желающие"] };
 }
 
 export async function loginAction(formData: FormData): Promise<{ ok: boolean }> {

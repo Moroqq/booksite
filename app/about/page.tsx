@@ -88,46 +88,74 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* Timeline */}
-        <section data-theme="dark" className="section-padding bg-[var(--bg-deep)]" aria-labelledby="timeline-heading">
-          <div className="container-layout max-w-3xl">
-            <FadeSection className="mb-14">
-              <p className="font-inter text-xs uppercase tracking-[0.2em] text-[var(--gold)] mb-4">Хронология</p>
-              <h2 id="timeline-heading" className="font-cormorant font-light text-white" style={{ fontSize: "clamp(1.8rem, 3.5vw, 2.5rem)" }}>
-                Ключевые события
+        {/* Tatiana */}
+        <section data-theme="light" className="section-padding bg-[var(--bg)]" aria-labelledby="tatiana-heading">
+          <div className="container-layout max-w-4xl">
+            <FadeSection className="mb-12">
+              <p className="font-inter text-xs uppercase tracking-[0.2em] text-[var(--gold)] mb-5">Автор</p>
+              <h2 id="tatiana-heading" className="font-cormorant font-light text-[var(--ink)] mb-4" style={{ fontSize: "clamp(1.8rem, 3.5vw, 2.5rem)" }}>
+                {TATIANA_BIO.name}
               </h2>
+              <p className="font-inter text-sm text-[var(--ink-soft)]/70 uppercase tracking-wider">
+                {TATIANA_BIO.role}
+              </p>
             </FadeSection>
-            <ol className="relative border-l border-[var(--gold)]/30 ml-4 space-y-0">
-              {ARNOLD_BIO.timeline.map((event, i) => (
-                <FadeSection key={i} delay={i * 60} as="li" className="pl-8 pb-10 last:pb-0">
-                  <div className="absolute -left-2 w-4 h-4 rounded-full border-2 border-[var(--gold)] bg-[var(--bg-deep)]" aria-hidden="true" />
-                  <span className="font-inter text-xs uppercase tracking-widest text-[var(--gold)] block mb-1">
-                    {event.year}
-                  </span>
-                  <p className="font-inter text-sm text-[var(--text-on-dark-soft)] leading-relaxed">
-                    {event.text}
+          </div>
+          <div className="container-layout grid grid-cols-1 lg:grid-cols-3 gap-12">
+            {/* Photos */}
+            <FadeSection className="flex flex-col gap-4">
+              {[
+                { src: "/images/tatiana-1.jpg", alt: "Татьяна Рожукене-Дорхаут Мэйс проводит занятие" },
+                { src: "/images/tatiana-2.jpg", alt: "Татьяна Рожукене-Дорхаут Мэйс" },
+                { src: "/images/tatiana-3.jpg", alt: "Татьяна Рожукене-Дорхаут Мэйс" },
+                { src: "/images/arnold-3.jpg", alt: "Татьяна Рожукене-Дорхаут Мэйс и Арнольд Дорхаут Мэйс" },
+              ].map((photo) => (
+                <Image
+                  key={photo.src}
+                  src={photo.src}
+                  alt={photo.alt}
+                  width={320}
+                  height={240}
+                  className="w-full h-auto rounded-2xl shadow-md"
+                />
+              ))}
+            </FadeSection>
+
+            {/* Bio text */}
+            <div className="lg:col-span-2 space-y-5">
+              {TATIANA_BIO.bio.map((paragraph, i) => (
+                <FadeSection key={i} delay={i * 40}>
+                  <p className="font-inter text-[var(--ink-soft)] leading-relaxed">
+                    {paragraph}
                   </p>
                 </FadeSection>
               ))}
-            </ol>
-          </div>
-        </section>
+              <FadeSection delay={TATIANA_BIO.bio.length * 40}>
+                <p className="font-inter text-[var(--ink-soft)] leading-relaxed italic border-l-2 border-[var(--gold)]/40 pl-4 mt-2">
+                  {TATIANA_BIO.closing}
+                </p>
+              </FadeSection>
 
-        {/* Tatiana */}
-        <section data-theme="light" className="section-padding bg-[var(--bg)]" aria-labelledby="tatiana-heading">
-          <div className="container-layout max-w-3xl">
-            <FadeSection>
-              <p className="font-inter text-xs uppercase tracking-[0.2em] text-[var(--gold)] mb-5">Соавтор</p>
-              <h2 id="tatiana-heading" className="font-cormorant font-light text-[var(--ink)] mb-6" style={{ fontSize: "clamp(1.8rem, 3.5vw, 2.5rem)" }}>
-                {TATIANA_BIO.name}
-              </h2>
-              <p className="font-inter text-sm text-[var(--ink-soft)]/70 uppercase tracking-wider mb-6">
-                {TATIANA_BIO.role}
-              </p>
-              <p className="font-inter text-[var(--ink-soft)] leading-relaxed">
-                {TATIANA_BIO.description}
-              </p>
-            </FadeSection>
+              <FadeSection delay={TATIANA_BIO.bio.length * 40 + 60} className="pt-4">
+                <p className="font-inter text-xs uppercase tracking-[0.2em] text-[var(--gold)] mb-4">Дипломы</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  {[
+                    { src: "/images/tatiana-diploma-1.jpg", alt: "Диплом лечебного педагога, Бад-Боль, Германия, 2002" },
+                    { src: "/images/tatiana-diploma-2.jpg", alt: "Свидетельство Rudolf Steinerseminariet, Ярна, Швеция" },
+                  ].map((diploma) => (
+                    <a key={diploma.src} href={diploma.src} target="_blank" rel="noopener noreferrer" className="block">
+                      <Image
+                        src={diploma.src}
+                        alt={diploma.alt}
+                        width={320}
+                        height={452}
+                        className="w-full h-auto rounded-xl border border-[var(--line)] shadow-sm transition-opacity hover:opacity-80"
+                      />
+                    </a>
+                  ))}
+                </div>
+              </FadeSection>
+            </div>
           </div>
         </section>
 

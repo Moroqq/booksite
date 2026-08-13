@@ -2,7 +2,7 @@ import crypto from "node:crypto";
 import { readLocalData, writeLocalData } from "./local-data";
 import { SEMINARS, type Seminar, type SeminarFormat } from "./seminars";
 
-export interface SeminarInput { title: string; location: string; dateStart: string; dateEnd: string; format: SeminarFormat; duration: string; price: number; instructor: string; description: string; forWhom: string[]; spots: number; spotsLeft: number; }
+export interface SeminarInput { title: string; location: string; dateStart: string; dateEnd: string; sessionDates?: string[]; format: SeminarFormat; duration: string; price: number; instructor: string; description: string; forWhom: string[]; spots: number; spotsLeft: number; }
 type Store = { seminars?: Seminar[]; articles?: unknown; orders?: unknown };
 function store() { const value = readLocalData<Store>({}); return { ...value, seminars: value.seminars?.length ? value.seminars : SEMINARS }; }
 function save(value: Store) { writeLocalData(value); }

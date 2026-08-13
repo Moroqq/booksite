@@ -6,6 +6,7 @@ export interface Seminar {
   location: string;
   dateStart: string;
   dateEnd: string;
+  sessionDates?: string[];
   format: SeminarFormat;
   duration: string;
   price: number;
