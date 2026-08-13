@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import FadeSection from "@/components/ui/FadeSection";
-import Image from "next/image";
+import FadeImage from "@/components/ui/FadeImage";
 import { ARNOLD_BIO, TATIANA_BIO, QUOTES } from "@/lib/content";
 
 export const metadata: Metadata = {
@@ -38,7 +38,7 @@ export default function AboutPage() {
             {/* Photos */}
             <FadeSection className="flex flex-col gap-4">
               {[1, 2, 3].map((n) => (
-                <Image
+                <FadeImage
                   key={n}
                   src={`/images/arnold-${n}.jpg`}
                   alt={`Арнольд Дорхаут Мэйс — фото ${n}`}
@@ -110,7 +110,7 @@ export default function AboutPage() {
                 { src: "/images/tatiana-3.jpg", alt: "Татьяна Рожукене-Дорхаут Мэйс" },
                 { src: "/images/arnold-3.jpg", alt: "Татьяна Рожукене-Дорхаут Мэйс и Арнольд Дорхаут Мэйс" },
               ].map((photo) => (
-                <Image
+                <FadeImage
                   key={photo.src}
                   src={photo.src}
                   alt={photo.alt}
@@ -144,7 +144,7 @@ export default function AboutPage() {
                     { src: "/images/tatiana-diploma-2.jpg", alt: "Свидетельство Rudolf Steinerseminariet, Ярна, Швеция" },
                   ].map((diploma) => (
                     <a key={diploma.src} href={diploma.src} target="_blank" rel="noopener noreferrer" className="block">
-                      <Image
+                      <FadeImage
                         src={diploma.src}
                         alt={diploma.alt}
                         width={320}
