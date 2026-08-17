@@ -107,8 +107,6 @@ export default function AboutPage() {
               {[
                 { src: "/images/tatiana-1.jpg", alt: "Татьяна Рожукене-Дорхаут Мэйс проводит занятие" },
                 { src: "/images/tatiana-2.jpg", alt: "Татьяна Рожукене-Дорхаут Мэйс" },
-                { src: "/images/tatiana-3.jpg", alt: "Татьяна Рожукене-Дорхаут Мэйс" },
-                { src: "/images/arnold-3.jpg", alt: "Татьяна Рожукене-Дорхаут Мэйс и Арнольд Дорхаут Мэйс" },
               ].map((photo) => (
                 <FadeImage
                   key={photo.src}
