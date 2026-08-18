@@ -6,6 +6,7 @@ import { verifyPassword, setSession, clearSession, isAuthed } from "@/lib/admin-
 import { createSeminar, deleteSeminar, updateSeminar, type SeminarInput } from "@/lib/seminars-db";
 import { createArticle, deleteArticle, updateArticle, type ArticleInput } from "@/lib/articles-db";
 import { getBookOrder, updateBookOrderStatus } from "@/lib/orders-db";
+import { updateSignupStatus } from "@/lib/seminar-signups-db";
 import type { SeminarFormat } from "@/lib/seminars";
 
 const FORMATS: SeminarFormat[] = ["Очный", "Онлайн", "Выездной"];
@@ -140,4 +141,26 @@ export async function rejectOrderPaymentAction(formData: FormData) {
   const order = getBookOrder(id);
   if (order?.status === "payment_pending") updateBookOrderStatus(id, "payment_rejected", reason);
   revalidateOrders();
+}
+
+function revalidateSignups() {
+  ["/admin", "/admin/signups", "/account"].forEach((path) => revalidatePath(path));
+}
+
+export async function confirmSignupAction(formData: FormData) {
+  ensureAccess();
+  updateSignupStatus(text(formData, "id"), "confirmed");
+  revalidateSignups();
+}
+
+export async function declineSignupAction(formData: FormData) {
+  ensureAccess();
+  updateSignupStatus(text(formData, "id"), "declined", text(formData, "reason"));
+  revalidateSignups();
+}
+
+export async function cancelSignupAction(formData: FormData) {
+  ensureAccess();
+  updateSignupStatus(text(formData, "id"), "cancelled");
+  revalidateSignups();
 }

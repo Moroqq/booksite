@@ -6,6 +6,7 @@ const links = [
   ["/admin/articles", "Статьи"],
   ["/admin/seminars", "Семинары"],
   ["/admin/orders", "Заказы книг"],
+  ["/admin/signups", "Записи на семинары"],
 ];
 
 export default function AdminShell({ children, active }: { children: React.ReactNode; active: string }) {

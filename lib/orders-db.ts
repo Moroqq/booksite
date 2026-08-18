@@ -7,6 +7,7 @@ export type OrderStatus = "payment_pending" | "preparing" | "shipped" | "payment
 export type BookOrder = {
   id: string;
   number: string;
+  userId?: string;
   bookTitle: string;
   quantity: number;
   total: number;
@@ -103,4 +104,9 @@ export function orderBuyerName(order: BookOrder) {
 
 export function orderItems(order: BookOrder) {
   return `${order.bookTitle} × ${order.quantity}`;
+}
+
+/** Заказы одного покупателя — для личного кабинета. */
+export function getBookOrdersByUser(userId: string) {
+  return store().orders!.filter((order) => order.userId === userId).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 }

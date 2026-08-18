@@ -13,6 +13,7 @@ const NAV_LINKS = [
   { href: "/seminars", label: "Семинары" },
   { href: "/about", label: "Об авторах" },
   { href: "/blog", label: "Статьи" },
+  { href: "/account", label: "Кабинет" },
 ];
 
 export default function Header() {

@@ -91,7 +91,7 @@ export default function SeminarsPage() {
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="font-cormorant text-3xl text-[var(--gold)]">{seminar.priceFormatted}</span>
-                        <Button href="mailto:info@zvukoterapia.ru" variant="ghost">Написать нам</Button>
+                        <Button href={`/seminars/signup?seminar=${seminar.id}`}>Записаться</Button>
                       </div>
                     </div>
                   </article>

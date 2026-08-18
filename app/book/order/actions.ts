@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createBookOrder } from "@/lib/orders-db";
+import { getCurrentUser, isLoginRequired } from "@/lib/customer-auth";
 
 export type OrderSubmission = {
   firstName: string;
@@ -18,6 +19,11 @@ const clean = (value: string) => value.trim();
 const isPhoneComplete = (value: string) => value.replace(/\D/g, "").length === 11;
 
 export async function submitOfflineBookOrder(input: OrderSubmission) {
+  const user = getCurrentUser();
+  if (isLoginRequired() && !user) {
+    return { ok: false, message: "Сессия истекла. Войдите заново, чтобы оформить заказ." };
+  }
+
   const firstName = clean(input.firstName);
   const lastName = clean(input.lastName);
   const email = clean(input.email);
@@ -34,11 +40,13 @@ export async function submitOfflineBookOrder(input: OrderSubmission) {
   }
 
   const order = createBookOrder({
+    userId: user?.id,
     customer: { firstName, lastName, email, phone },
     delivery: { method: deliveryMethod, address, comment: clean(input.comment || "") || undefined },
     quantity,
   });
   revalidatePath("/admin");
   revalidatePath("/admin/orders");
+  revalidatePath("/account");
   return { ok: true, number: order.number };
 }
