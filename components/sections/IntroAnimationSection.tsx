@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react";
 /**
  * Вступительная анимация — рисующийся зодиакальный круг.
  * Раньше это были 116 PNG-кадров (55 МБ), которые браузер тянул целиком до начала показа.
- * Теперь то же самое одним видео (~0,8 МБ) с постером, который виден мгновенно.
+ * Теперь то же самое видео: телефонам отдаём версию 640 px (~0,5 МБ), остальным — 1052 px.
  */
 export default function IntroAnimationSection() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -44,6 +44,8 @@ export default function IntroAnimationSection() {
         disablePictureInPicture
         className="block h-auto w-[88%] sm:w-[70%] lg:w-1/2"
       >
+        <source src="/intro-mobile.webm" type="video/webm" media="(max-width: 640px)" />
+        <source src="/intro-mobile.mp4" type="video/mp4" media="(max-width: 640px)" />
         <source src="/intro.webm" type="video/webm" />
         <source src="/intro.mp4" type="video/mp4" />
       </video>
