@@ -2,60 +2,51 @@
 
 import { useEffect, useRef } from "react";
 
-const FIRST = 36;
-const LAST = 151;
-const COUNT = LAST - FIRST + 1; // 116 frames
-const FPS = 24;
-
+/**
+ * Вступительная анимация — рисующийся зодиакальный круг.
+ * Раньше это были 116 PNG-кадров (55 МБ), которые браузер тянул целиком до начала показа.
+ * Теперь то же самое одним видео (~0,8 МБ) с постером, который виден мгновенно.
+ */
 export default function IntroAnimationSection() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const framesRef = useRef<HTMLImageElement[]>([]);
-  const curRef = useRef(0);
-  const rafRef = useRef<number>(0);
-  const lastTimeRef = useRef(0);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    const video = videoRef.current;
+    if (!video) return;
 
-    const frames: HTMLImageElement[] = Array.from({ length: COUNT }, (_, i) => {
-      const img = new Image();
-      img.src = `/frames/intro_frame_${String(FIRST + i).padStart(3, "0")}.png`;
-      return img;
-    });
-    framesRef.current = frames;
-
-    frames[0].onload = () => {
-      canvas.width = frames[0].naturalWidth;
-      canvas.height = frames[0].naturalHeight;
-      ctx.drawImage(frames[0], 0, 0);
-      rafRef.current = requestAnimationFrame(tick);
-    };
-
-    function tick(timestamp: number) {
-      if (curRef.current >= COUNT - 1) return;
-      if (timestamp - lastTimeRef.current >= 1000 / FPS) {
-        curRef.current++;
-        const img = framesRef.current[curRef.current];
-        if (img?.complete && img.naturalWidth) {
-          ctx!.drawImage(img, 0, 0, canvas!.width, canvas!.height);
-        }
-        lastTimeRef.current = timestamp;
-      }
-      rafRef.current = requestAnimationFrame(tick);
+    // Пользователям, попросившим убрать анимации, показываем только первый кадр.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      video.autoplay = false;
+      video.pause();
+      video.currentTime = 0;
+      return;
     }
 
-    return () => cancelAnimationFrame(rafRef.current);
+    // Safari на iOS иногда игнорирует autoplay до готовности данных — подстраховываемся.
+    const play = () => video.play().catch(() => {});
+    if (video.readyState >= 2) play();
+    else video.addEventListener("loadeddata", play, { once: true });
+    return () => video.removeEventListener("loadeddata", play);
   }, []);
 
   return (
     <section aria-hidden="true" className="w-full pt-16 md:pt-20 flex justify-center bg-[var(--intro-bg)]">
-      <canvas
-        ref={canvasRef}
-        style={{ display: "block", width: "50%", height: "auto" }}
-      />
+      <video
+        ref={videoRef}
+        width={1052}
+        height={876}
+        poster="/intro-poster.webp"
+        autoPlay
+        muted
+        playsInline
+        preload="auto"
+        tabIndex={-1}
+        disablePictureInPicture
+        className="block h-auto w-[88%] sm:w-[70%] lg:w-1/2"
+      >
+        <source src="/intro.webm" type="video/webm" />
+        <source src="/intro.mp4" type="video/mp4" />
+      </video>
     </section>
   );
 }
