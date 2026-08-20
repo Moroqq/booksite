@@ -29,10 +29,17 @@ export const metadata: Metadata = {
   },
   description:
     "Авторский метод духовной звукотерапии Арнольда Дорхаут Мэйс. Книга, семинары, практики. Институт духовной звукотерапии им. А. Д. Мэйс.",
+  metadataBase: new URL(process.env.SITE_ORIGIN || "https://zvukterap.ru"),
   openGraph: {
     type: "website",
     locale: "ru_RU",
     siteName: "Духовная звукотерапия",
+    // Картинка-превью для мессенджеров и соцсетей.
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "Духовная звукотерапия гласных и согласных звуков" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/og-image.jpg"],
   },
   robots: {
     index: true,
