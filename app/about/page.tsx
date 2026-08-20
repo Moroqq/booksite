@@ -106,8 +106,7 @@ export default function AboutPage() {
             <FadeSection className="flex flex-col gap-4">
               {[
                 { src: "/images/tatiana-1.jpg", alt: "Татьяна Рожукене-Дорхаут Мэйс проводит занятие" },
-                { src: "/images/tatiana-2.jpg", alt: "Татьяна Рожукене-Дорхаут Мэйс" },
-                { src: "/images/tatiana-pink.jpg", alt: "Татьяна Рожукене-Дорхаут Мэйс" },
+                { src: "/images/tatiana-portrait.jpg", alt: "Татьяна Рожукене-Дорхаут Мэйс" },
                 { src: "/images/tatiana-group.jpg", alt: "Татьяна Рожукене-Дорхаут Мэйс с группой участников занятий" },
               ].map((photo) => (
                 <FadeImage
