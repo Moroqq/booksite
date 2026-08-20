@@ -7,6 +7,7 @@ import { createSeminar, deleteSeminar, updateSeminar, type SeminarInput } from "
 import { createArticle, deleteArticle, updateArticle, type ArticleInput } from "@/lib/articles-db";
 import { getBookOrder, updateBookOrderStatus } from "@/lib/orders-db";
 import { updateSignupStatus } from "@/lib/seminar-signups-db";
+import { sendOrderStatusChanged, sendSignupStatusChanged } from "@/lib/letters";
 import type { SeminarFormat } from "@/lib/seminars";
 
 const FORMATS: SeminarFormat[] = ["Очный", "Онлайн", "Выездной"];
@@ -122,7 +123,10 @@ export async function confirmOrderPaymentAction(formData: FormData) {
   ensureAccess();
   const id = text(formData, "id");
   const order = getBookOrder(id);
-  if (order?.status === "payment_pending") updateBookOrderStatus(id, "preparing");
+  if (order?.status === "payment_pending") {
+    const updated = updateBookOrderStatus(id, "preparing");
+    if (updated) await sendOrderStatusChanged(updated);
+  }
   revalidateOrders();
 }
 
@@ -130,7 +134,10 @@ export async function markOrderShippedAction(formData: FormData) {
   ensureAccess();
   const id = text(formData, "id");
   const order = getBookOrder(id);
-  if (order && (order.status === "payment_pending" || order.status === "preparing")) updateBookOrderStatus(id, "shipped");
+  if (order && (order.status === "payment_pending" || order.status === "preparing")) {
+    const updated = updateBookOrderStatus(id, "shipped");
+    if (updated) await sendOrderStatusChanged(updated);
+  }
   revalidateOrders();
 }
 
@@ -139,7 +146,10 @@ export async function rejectOrderPaymentAction(formData: FormData) {
   const id = text(formData, "id");
   const reason = text(formData, "reason");
   const order = getBookOrder(id);
-  if (order?.status === "payment_pending") updateBookOrderStatus(id, "payment_rejected", reason);
+  if (order?.status === "payment_pending") {
+    const updated = updateBookOrderStatus(id, "payment_rejected", reason);
+    if (updated) await sendOrderStatusChanged(updated);
+  }
   revalidateOrders();
 }
 
@@ -149,18 +159,21 @@ function revalidateSignups() {
 
 export async function confirmSignupAction(formData: FormData) {
   ensureAccess();
-  updateSignupStatus(text(formData, "id"), "confirmed");
+  const updated = updateSignupStatus(text(formData, "id"), "confirmed");
+  if (updated) await sendSignupStatusChanged(updated);
   revalidateSignups();
 }
 
 export async function declineSignupAction(formData: FormData) {
   ensureAccess();
-  updateSignupStatus(text(formData, "id"), "declined", text(formData, "reason"));
+  const updated = updateSignupStatus(text(formData, "id"), "declined", text(formData, "reason"));
+  if (updated) await sendSignupStatusChanged(updated);
   revalidateSignups();
 }
 
 export async function cancelSignupAction(formData: FormData) {
   ensureAccess();
-  updateSignupStatus(text(formData, "id"), "cancelled");
+  const updated = updateSignupStatus(text(formData, "id"), "cancelled");
+  if (updated) await sendSignupStatusChanged(updated);
   revalidateSignups();
 }
