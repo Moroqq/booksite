@@ -135,7 +135,7 @@ export default function SeminarsPage() {
               <p className="font-inter text-[var(--ink-soft)] mb-8">
                 Напишите нам — мы подберём формат: индивидуальную консультацию или запишем вас в группу продолжающих.
               </p>
-              <Button href="mailto:info@zvukoterapia.ru" variant="ghost">Написать нам</Button>
+              <Button href="mailto:info@zvukterap.ru" variant="ghost">Написать нам</Button>
             </FadeSection>
           </div>
         </section>

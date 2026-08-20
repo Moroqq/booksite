@@ -52,10 +52,10 @@ export default function Footer() {
             <ul className="space-y-3 font-inter text-sm text-[var(--gold-soft)]/70">
               <li>
                 <a
-                  href="mailto:info@zvukoterapia.ru"
+                  href="mailto:info@zvukterap.ru"
                   className="hover:text-[var(--gold-soft)] transition-colors duration-300"
                 >
-                  info@zvukoterapia.ru
+                  info@zvukterap.ru
                 </a>
               </li>
               <li>Санкт-Петербург</li>
