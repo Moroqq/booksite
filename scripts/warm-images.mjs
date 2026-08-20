@@ -11,43 +11,51 @@
 const origin = (process.argv[2] || "http://127.0.0.1:3010").replace(/\/$/, "");
 const PAGES = ["/", "/book", "/about", "/method", "/seminars", "/blog"];
 const ACCEPT = "image/webp,image/*,*/*";
+const MARKER = "/_next/image?";
+const STOP = ['"', "'", " ", "<", ">"];
 
-const decode = (value) =>
-  value.replace(/&amp;/g, "&").replace(/&#x27;/g, "'").replace(/&quot;/g, '"');
-
-async function imageUrlsOf(page) {
-  const response = await fetch(`${origin}${page}`, { headers: { Accept: "text/html" } });
-  if (!response.ok) return [];
-  const html = await response.text();
-  const found = html.match(/\/_next\/image\?[^"'\s\]+/g) || [];
-  return found.map((url) => decode(url));
+/** Достаём адреса картинок без регулярных выражений — так надёжнее при переносе файла. */
+function imageUrlsIn(html) {
+  const found = [];
+  let start = html.indexOf(MARKER);
+  while (start !== -1) {
+    let end = start;
+    while (end < html.length && !STOP.includes(html[end])) end++;
+    found.push(html.slice(start, end).split("&amp;").join("&"));
+    start = html.indexOf(MARKER, end);
+  }
+  return found;
 }
 
 const urls = new Set();
 for (const page of PAGES) {
   try {
-    (await imageUrlsOf(page)).forEach((url) => urls.add(url));
+    const response = await fetch(origin + page, { headers: { Accept: "text/html" } });
+    if (!response.ok) {
+      console.log("страница " + page + " ответила " + response.status);
+      continue;
+    }
+    imageUrlsIn(await response.text()).forEach((url) => urls.add(url));
   } catch (error) {
-    console.log(`не удалось прочитать ${page}: ${error.message}`);
+    console.log("не удалось прочитать " + page + ": " + error.message);
   }
 }
 
-console.log(`картинок к прогреву: ${urls.size}`);
+console.log("картинок к прогреву: " + urls.size);
 
 let done = 0;
 let failed = 0;
 const started = Date.now();
+const queue = [...urls];
 
 // По две за раз: сервер одноядерный, больше — только очередь и таймауты.
-const queue = [...urls];
 async function worker() {
   while (queue.length) {
     const url = queue.shift();
     try {
-      const response = await fetch(`${origin}${url}`, { headers: { Accept: ACCEPT } });
+      const response = await fetch(origin + url, { headers: { Accept: ACCEPT } });
       await response.arrayBuffer();
-      if (response.ok) done++;
-      else failed++;
+      response.ok ? done++ : failed++;
     } catch {
       failed++;
     }
@@ -55,4 +63,4 @@ async function worker() {
 }
 await Promise.all([worker(), worker()]);
 
-console.log(`прогрето: ${done}, с ошибкой: ${failed}, заняло ${Math.round((Date.now() - started) / 1000)} с`);
+console.log("прогрето: " + done + ", с ошибкой: " + failed + ", заняло " + Math.round((Date.now() - started) / 1000) + " с");
