@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { siteOrigin } from "@/lib/site";
 import { ALL_PROVIDERS, isProviderConfigured, safeNextPath } from "@/lib/customer-auth";
 import { authorizeUrl, createState, createVerifier } from "@/lib/oauth";
 import type { AuthProvider } from "@/lib/users-db";
@@ -9,7 +10,7 @@ export const dynamic = "force-dynamic";
 export async function GET(request: NextRequest, { params }: { params: { provider: string } }) {
   const provider = params.provider as AuthProvider;
   if (!ALL_PROVIDERS.includes(provider) || !isProviderConfigured(provider)) {
-    return NextResponse.redirect(new URL("/login?error=provider", request.url));
+    return NextResponse.redirect(new URL("/login?error=provider", siteOrigin()));
   }
 
   const state = createState();

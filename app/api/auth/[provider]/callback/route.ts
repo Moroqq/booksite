@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { siteOrigin } from "@/lib/site";
 import { ALL_PROVIDERS, isProviderConfigured, safeNextPath, setCustomerSession } from "@/lib/customer-auth";
 import { exchangeCode, fetchProfile } from "@/lib/oauth";
 import { upsertUserFromProfile, type AuthProvider } from "@/lib/users-db";
@@ -8,7 +9,7 @@ export const dynamic = "force-dynamic";
 type Flow = { provider?: string; state?: string; verifier?: string; next?: string };
 
 function fail(request: NextRequest, reason: string) {
-  return NextResponse.redirect(new URL(`/login?error=${reason}`, request.url));
+  return NextResponse.redirect(new URL(`/login?error=${reason}`, siteOrigin()));
 }
 
 /** Возврат от сервиса входа: меняем код на токен, заводим пользователя, ставим сессию. */
@@ -39,7 +40,7 @@ export async function GET(request: NextRequest, { params }: { params: { provider
     const user = upsertUserFromProfile(await fetchProfile(provider, token));
     setCustomerSession(user.id);
 
-    const response = NextResponse.redirect(new URL(safeNextPath(flow.next), request.url));
+    const response = NextResponse.redirect(new URL(safeNextPath(flow.next), siteOrigin()));
     response.cookies.delete("oauth_flow");
     return response;
   } catch (error) {
