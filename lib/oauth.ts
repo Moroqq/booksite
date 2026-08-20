@@ -1,14 +1,11 @@
 import crypto from "node:crypto";
 import type { AuthProvider, OAuthProfile } from "./users-db";
+import { siteOrigin } from "./site";
 
 /**
  * Вход через российские сервисы.
  * VK ID работает по OAuth 2.1 с PKCE (старый OAuth 2.0 отключён), Яндекс ID — по обычному OAuth 2.0.
  */
-
-export function siteOrigin() {
-  return (process.env.SITE_ORIGIN || "http://localhost:3010").replace(/\/$/, "");
-}
 
 export function redirectUri(provider: AuthProvider) {
   return `${siteOrigin()}/api/auth/${provider}/callback`;

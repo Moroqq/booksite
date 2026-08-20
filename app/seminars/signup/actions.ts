@@ -67,5 +67,5 @@ export async function submitSeminarSignup(input: SignupSubmission) {
   revalidatePath("/admin");
   revalidatePath("/admin/signups");
   revalidatePath("/account");
-  return { ok: true, number: signup.number };
+  return { ok: true, number: signup.number, token: signup.token };
 }

@@ -7,6 +7,8 @@ export type SeminarSignup = {
   id: string;
   number: string;
   userId?: string;
+  /** Секретный ключ для личной ссылки на заявку. */
+  token: string;
   seminarId: string;
   seminarTitle: string;
   seminarDate: string;
@@ -17,9 +19,10 @@ export type SeminarSignup = {
   updatedAt: string;
   status: SignupStatus;
   declineReason?: string;
+  reminderSentAt?: string;
 };
 
-export type SeminarSignupInput = Omit<SeminarSignup, "id" | "number" | "createdAt" | "updatedAt" | "status" | "declineReason">;
+export type SeminarSignupInput = Omit<SeminarSignup, "id" | "number" | "token" | "createdAt" | "updatedAt" | "status" | "declineReason" | "reminderSentAt">;
 
 type Store = { seminarSignups?: SeminarSignup[] } & Record<string, unknown>;
 
@@ -67,6 +70,7 @@ export function createSeminarSignup(input: SeminarSignupInput) {
   const signup: SeminarSignup = {
     id: `signup-${crypto.randomUUID()}`,
     number: nextNumber(value.seminarSignups!),
+    token: crypto.randomBytes(18).toString("base64url"),
     ...input,
     createdAt: now,
     updatedAt: now,
@@ -93,4 +97,31 @@ export function updateSignupStatus(id: string, status: SignupStatus, declineReas
 
 export function signupPersonName(signup: SeminarSignup) {
   return `${signup.customer.firstName} ${signup.customer.lastName}`.trim();
+}
+
+/** Заявка по личной ссылке из письма. */
+export function getSeminarSignupByToken(token: string) {
+  if (!token) return null;
+  return store().seminarSignups!.find((signup) => signup.token === token) || null;
+}
+
+/** Подтверждённые записи на семинары, которые начинаются в ближайшие сутки. */
+export function signupsToRemind() {
+  const now = Date.now();
+  const day = 24 * 60 * 60 * 1000;
+  return store().seminarSignups!.filter((signup) => {
+    if (signup.status !== "confirmed" || signup.reminderSentAt) return false;
+    const start = Date.parse((signup.seminarDate || "").slice(0, 10));
+    if (Number.isNaN(start)) return false;
+    return start - now > 0 && start - now <= day;
+  });
+}
+
+export function markSignupReminderSent(id: string) {
+  const value = store();
+  const signup = value.seminarSignups!.find((item) => item.id === id);
+  if (!signup) return null;
+  signup.reminderSentAt = new Date().toISOString();
+  save(value);
+  return signup;
 }

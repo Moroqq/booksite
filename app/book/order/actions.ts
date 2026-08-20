@@ -50,5 +50,5 @@ export async function submitOfflineBookOrder(input: OrderSubmission) {
   revalidatePath("/admin");
   revalidatePath("/admin/orders");
   revalidatePath("/account");
-  return { ok: true, number: order.number };
+  return { ok: true, number: order.number, token: order.token };
 }

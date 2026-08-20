@@ -4,6 +4,7 @@ import { orderBuyerName, type BookOrder } from "./orders-db";
 import { signupPersonName, type SeminarSignup } from "./seminar-signups-db";
 import { PROFESSION_LABELS } from "./schema";
 import { humanDates } from "./human-date";
+import { orderUrl, signupUrl } from "./site";
 
 /** Тексты писем собраны в одном месте, чтобы их можно было править не трогая логику. */
 
@@ -25,6 +26,7 @@ export async function sendOrderCreated(order: BookOrder) {
       `Осталось перевести оплату по номеру <b>${OFFLINE_PAYMENT.phone}</b> (${OFFLINE_PAYMENT.bank}). Назначение платежа указывать не нужно.`,
       `После перевода вернитесь на сайт и нажмите кнопку «Я оплатил» — мы проверим поступление и напишем вам.`,
       `Доставка: ${order.delivery.method}, адрес — ${order.delivery.address}.`,
+      `<b><a href="${orderUrl(order.token)}" style="color:#C9A24B;">Посмотреть состояние заказа</a></b> — по этой ссылке всегда видно, на каком он этапе. Сохраните письмо.`,
     ],
     footnote: "Если письмо пришло вам по ошибке, просто не отвечайте на него.",
   });
@@ -80,7 +82,7 @@ export async function sendOrderStatusChanged(order: BookOrder) {
     to: order.customer.email,
     subject: letter.subject,
     heading: `Здравствуйте, ${order.customer.firstName}!`,
-    lines: letter.lines,
+    lines: [...letter.lines, `<a href="${orderUrl(order.token)}" style="color:#C9A24B;">Открыть заказ ${order.number}</a>`],
   });
 }
 
@@ -95,6 +97,7 @@ export async function sendSignupCreated(signup: SeminarSignup) {
       `Мы получили вашу заявку <b>${signup.number}</b> на семинар «${signup.seminarTitle}».`,
       `Даты занятий: ${humanDates(signup.seminarDate)}`,
       `Мы свяжемся с вами по телефону ${signup.customer.phone}, подтвердим участие и расскажем, как всё будет проходить.`,
+      `<b><a href="${signupUrl(signup.token)}" style="color:#C9A24B;">Посмотреть состояние заявки</a></b> — сохраните это письмо.`,
     ],
   });
 
@@ -144,6 +147,39 @@ export async function sendSignupStatusChanged(signup: SeminarSignup) {
     to: signup.customer.email,
     subject: letter.subject,
     heading: `Здравствуйте, ${signup.customer.firstName}!`,
-    lines: letter.lines,
+    lines: [...letter.lines, `<a href="${signupUrl(signup.token)}" style="color:#C9A24B;">Открыть заявку ${signup.number}</a>`],
+  });
+}
+
+// ——— Напоминания ———
+
+/** Заказ висит неоплаченным — мягко напоминаем, без давления. */
+export async function sendPaymentReminder(order: BookOrder) {
+  await send({
+    to: order.customer.email,
+    subject: `Заказ ${order.number} ждёт оплаты`,
+    heading: `Здравствуйте, ${order.customer.firstName}!`,
+    lines: [
+      `Мы пока не нашли перевод по вашему заказу <b>${order.number}</b> на сумму <b>${money(order.total)}</b>.`,
+      `Если вы уже оплатили — ничего делать не нужно, иногда перевод идёт дольше обычного, мы всё увидим и напишем.`,
+      `Если нет — переведите по номеру <b>${OFFLINE_PAYMENT.phone}</b> (${OFFLINE_PAYMENT.bank}), назначение платежа указывать не нужно.`,
+      `<a href="${orderUrl(order.token)}" style="color:#C9A24B;">Открыть заказ ${order.number}</a>`,
+    ],
+    footnote: "Передумали? Просто ответьте на это письмо, и мы отменим заказ.",
+  });
+}
+
+/** За сутки до семинара — дата, место и напоминание про отмену. */
+export async function sendSeminarReminder(signup: SeminarSignup, place?: string) {
+  await send({
+    to: signup.customer.email,
+    subject: `Завтра семинар «${signup.seminarTitle}»`,
+    heading: `Здравствуйте, ${signup.customer.firstName}!`,
+    lines: [
+      `Напоминаем: завтра начинается семинар «${signup.seminarTitle}».`,
+      `Даты занятий: ${humanDates(signup.seminarDate)}${place ? `<br>Где: ${place}` : ""}`,
+      `Если планы изменились — сообщите нам, пожалуйста, чтобы мы освободили место для другого участника.`,
+      `<a href="${signupUrl(signup.token)}" style="color:#C9A24B;">Открыть заявку ${signup.number}</a>`,
+    ],
   });
 }

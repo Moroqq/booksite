@@ -37,6 +37,7 @@ export default function SignupForm({ seminarId, user }: { seminarId: string; use
   });
   const [error, setError] = useState("");
   const [done, setDone] = useState("");
+  const [token, setToken] = useState("");
   const [isPending, startTransition] = useTransition();
 
   const update = (name: keyof Values, value: string) => setValues((current) => ({ ...current, [name]: value }));
@@ -46,7 +47,7 @@ export default function SignupForm({ seminarId, user }: { seminarId: string; use
     setError("");
     startTransition(async () => {
       const result = await submitSeminarSignup({ seminarId, ...values });
-      if (result.ok) setDone(result.number || "");
+      if (result.ok) { setToken(result.token || ""); setDone(result.number || ""); }
       else setError(result.message || "Не удалось отправить заявку.");
     });
   };
@@ -59,11 +60,11 @@ export default function SignupForm({ seminarId, user }: { seminarId: string; use
         </span>
         <h2 className="mt-4 font-cormorant text-3xl text-[var(--ink)]">Заявка отправлена</h2>
         <p className="mt-2 font-inter text-sm text-[var(--ink-soft)]">
-          Номер заявки — {done}. Мы свяжемся с вами по указанному телефону и подтвердим участие.
+          Номер заявки — {done}. Мы свяжемся с вами по указанному телефону и подтвердим участие. Ссылка на заявку отправлена вам на почту.
         </p>
         <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
-          <Link href="/account" className="rounded-full bg-[var(--bg-deep)] px-6 py-3 font-inter text-xs uppercase tracking-widest text-white hover:bg-[var(--gold)]">
-            Мои записи
+          <Link href={token ? `/signup/${token}` : "/seminars"} className="rounded-full bg-[var(--bg-deep)] px-6 py-3 font-inter text-xs uppercase tracking-widest text-white hover:bg-[var(--gold)]">
+            Открыть заявку
           </Link>
           <Link href="/seminars" className="rounded-full border border-[var(--line)] px-6 py-3 font-inter text-xs uppercase tracking-widest text-[var(--ink-soft)] hover:border-[var(--gold)]">
             К списку семинаров
