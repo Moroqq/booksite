@@ -10,6 +10,7 @@ import MusicOfSpheres from "@/components/sections/MusicOfSpheres";
 import SevenProcesses from "@/components/sections/SevenProcesses";
 import ThreeRings from "@/components/sections/ThreeRings";
 import { METHOD_OVERVIEW, QUOTES } from "@/lib/content";
+import { vowelSoundsReady } from "@/lib/media";
 
 export const metadata: Metadata = {
   title: "Метод духовной звукотерапии — гласные, согласные, планеты, зодиак",
@@ -81,7 +82,7 @@ export default function MethodPage() {
               </p>
             </FadeSection>
             <FadeSection delay={100}>
-              <VowelCircle />
+              <VowelCircle soundsReady={vowelSoundsReady()} />
             </FadeSection>
           </div>
         </section>

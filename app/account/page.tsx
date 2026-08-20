@@ -2,7 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { getCurrentUser, PROVIDER_LABELS } from "@/lib/customer-auth";
+import { configuredProviders, getCurrentUser, PROVIDER_LABELS } from "@/lib/customer-auth";
 import { getBookOrdersByUser, type OrderStatus } from "@/lib/orders-db";
 import { getSeminarSignupsByUser, type SignupStatus } from "@/lib/seminar-signups-db";
 import { PROFESSION_LABELS } from "@/lib/schema";
@@ -33,6 +33,9 @@ function date(value: string) {
 }
 
 export default function AccountPage() {
+  // Без настроенного входа личного кабинета не существует — ведём на «Мой заказ».
+  if (!configuredProviders().length) redirect("/check");
+
   const user = getCurrentUser();
   if (!user) redirect("/login?next=/account");
 

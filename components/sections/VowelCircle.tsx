@@ -18,11 +18,10 @@ const POSITIONS = VOWELS.map((v, i) => {
   return polarToCartesian(CX, CY, RADIUS, angle);
 });
 
-export default function VowelCircle() {
+export default function VowelCircle({ soundsReady = false }: { soundsReady?: boolean }) {
   const [active, setActive] = useState<number | null>(null);
 
   const handleSound = (index: number) => {
-    // TODO: замените на реальные файлы от заказчика
     const audio = new Audio(VOWELS[index].soundFile);
     audio.play().catch(() => {});
   };
@@ -166,22 +165,21 @@ export default function VowelCircle() {
               <p className="font-inter text-[var(--ink-soft)] leading-relaxed mb-6">
                 {VOWELS[active].description}
               </p>
-              <button
-                className="flex items-center gap-2 font-inter text-sm text-[var(--ink-soft)] hover:text-[var(--ink)] transition-colors duration-300 group"
-                onClick={() => handleSound(active)}
-                aria-label={`Услышать звук ${VOWELS[active].letter}`}
-              >
-                <span
-                  className="w-8 h-8 rounded-full border flex items-center justify-center group-hover:border-[var(--gold)] transition-colors duration-300"
-                  style={{ borderColor: VOWELS[active].colorHex + "60" }}
+              {soundsReady && (
+                <button
+                  className="flex items-center gap-2 font-inter text-sm text-[var(--ink-soft)] hover:text-[var(--ink)] transition-colors duration-300 group"
+                  onClick={() => handleSound(active)}
+                  aria-label={`Услышать звук ${VOWELS[active].letter}`}
                 >
-                  <Volume2 size={14} style={{ color: VOWELS[active].colorHex }} />
-                </span>
-                Услышать поток
-                <span className="font-inter text-xs text-[var(--ink-soft)]/40">
-                  (TODO: загрузить аудио)
-                </span>
-              </button>
+                  <span
+                    className="w-8 h-8 rounded-full border flex items-center justify-center group-hover:border-[var(--gold)] transition-colors duration-300"
+                    style={{ borderColor: VOWELS[active].colorHex + "60" }}
+                  >
+                    <Volume2 size={14} style={{ color: VOWELS[active].colorHex }} />
+                  </span>
+                  Услышать поток
+                </button>
+              )}
             </div>
           ) : (
             <div className="text-center lg:text-left">

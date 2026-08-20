@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import LoginOptions from "@/components/auth/LoginOptions";
-import { getCurrentUser, safeNextPath } from "@/lib/customer-auth";
+import { configuredProviders, getCurrentUser, safeNextPath } from "@/lib/customer-auth";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Вход — Духовная звукотерапия" };
@@ -17,6 +17,10 @@ const ERRORS: Record<string, string> = {
 };
 
 export default function LoginPage({ searchParams }: { searchParams: { next?: string; error?: string } }) {
+  // Аккаунтов на сайте нет: пока сервисы входа не настроены, страница входа не нужна —
+  // отправляем человека туда, где он найдёт свой заказ.
+  if (!configuredProviders().length) redirect("/check");
+
   const next = safeNextPath(searchParams.next);
   if (getCurrentUser()) redirect(next);
   const error = searchParams.error ? ERRORS[searchParams.error] || ERRORS.failed : "";

@@ -55,8 +55,8 @@ function PaymentConfirmedOverlay({ onDone }: { onDone: () => void }) {
         </svg>
         <div>
           <h2 className="mt-5 font-cormorant text-2xl text-[var(--ink)]">Оплата отправлена на проверку</h2>
-          <p className="mt-2 font-inter text-sm leading-relaxed text-[var(--ink-soft)]">Как только мы подтвердим поступление перевода, вам придёт SMS с информацией о доставке.</p>
-          <button type="button" onClick={onDone} className="mt-6 rounded-full bg-[var(--bg-deep)] px-6 py-3 font-inter text-xs uppercase tracking-widest text-white hover:bg-[var(--gold)]">На главную</button>
+          <p className="mt-2 font-inter text-sm leading-relaxed text-[var(--ink-soft)]">Мы проверим перевод и напишем вам на почту. Ссылка на заказ уже отправлена — по ней всегда видно, на каком он этапе.</p>
+          <button type="button" onClick={onDone} className="mt-6 rounded-full bg-[var(--bg-deep)] px-6 py-3 font-inter text-xs uppercase tracking-widest text-white hover:bg-[var(--gold)]">Открыть мой заказ</button>
         </div>
       </div>
       <style>{`
