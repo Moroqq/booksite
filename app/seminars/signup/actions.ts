@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { getCurrentUser, isLoginRequired } from "@/lib/customer-auth";
+import { getCurrentUser } from "@/lib/customer-auth";
 import { getSeminarById } from "@/lib/seminars-db";
 import { createSeminarSignup, hasActiveSignup } from "@/lib/seminar-signups-db";
 import { PROFESSION_LABELS } from "@/lib/schema";
@@ -21,10 +21,8 @@ const clean = (value: string) => value.trim();
 const isPhoneComplete = (value: string) => value.replace(/\D/g, "").length === 11;
 
 export async function submitSeminarSignup(input: SignupSubmission) {
+  // Вход не требуется: запись свободная, ссылка на заявку уходит в письме.
   const user = getCurrentUser();
-  if (isLoginRequired() && !user) {
-    return { ok: false, message: "Сессия истекла. Войдите заново, чтобы записаться." };
-  }
 
   const seminar = getSeminarById(clean(input.seminarId));
   if (!seminar) return { ok: false, message: "Семинар не найден. Вернитесь к списку и выберите другой." };

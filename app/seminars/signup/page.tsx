@@ -3,8 +3,7 @@ import { redirect } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import AuthGate from "@/components/auth/AuthGate";
-import { getCurrentUser, isLoginRequired } from "@/lib/customer-auth";
+import { getCurrentUser } from "@/lib/customer-auth";
 import { getSeminarById } from "@/lib/seminars-db";
 import SignupForm from "./SignupForm";
 
@@ -16,7 +15,6 @@ export default function SeminarSignupPage({ searchParams }: { searchParams: { se
   if (!seminar) redirect("/seminars");
 
   const user = getCurrentUser();
-  const next = `/seminars/signup?seminar=${encodeURIComponent(seminar.id)}`;
   const dates = seminar.sessionDates?.length ? seminar.sessionDates.join(", ") : seminar.dateStart;
 
   return (
@@ -37,15 +35,7 @@ export default function SeminarSignupPage({ searchParams }: { searchParams: { se
             </header>
 
             <div className="mt-7">
-              {isLoginRequired() && !user ? (
-                <AuthGate
-                  next={next}
-                  title="Сначала войдите"
-                  description="Запись привязывается к вашему аккаунту — так вы будете видеть даты занятий и состояние заявки: ждёт подтверждения или место за вами закреплено."
-                />
-              ) : (
-                <SignupForm seminarId={seminar.id} user={user} />
-              )}
+              <SignupForm seminarId={seminar.id} user={user} />
             </div>
           </div>
         </section>

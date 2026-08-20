@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createBookOrder } from "@/lib/orders-db";
 import { sendOrderCreated } from "@/lib/letters";
-import { getCurrentUser, isLoginRequired } from "@/lib/customer-auth";
+import { getCurrentUser } from "@/lib/customer-auth";
 
 export type OrderSubmission = {
   firstName: string;
@@ -20,10 +20,8 @@ const clean = (value: string) => value.trim();
 const isPhoneComplete = (value: string) => value.replace(/\D/g, "").length === 11;
 
 export async function submitOfflineBookOrder(input: OrderSubmission) {
+  // Вход не требуется: заказ оформляется свободно, ссылка на него уходит в письме.
   const user = getCurrentUser();
-  if (isLoginRequired() && !user) {
-    return { ok: false, message: "Сессия истекла. Войдите заново, чтобы оформить заказ." };
-  }
 
   const firstName = clean(input.firstName);
   const lastName = clean(input.lastName);
