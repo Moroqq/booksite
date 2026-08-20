@@ -183,3 +183,12 @@ export async function sendSeminarReminder(signup: SeminarSignup, place?: string)
     ],
   });
 }
+
+/**
+ * Отправка в фоне. Покупатель не должен ждать почтовый сервер: заказ уже сохранён,
+ * а на подключение к почте уходят секунды — из-за этого экран подтверждения не дожидался
+ * ответа и показывал ошибку.
+ */
+export function inBackground(task: Promise<unknown>) {
+  task.catch((error) => console.error("[MAIL] фоновая отправка не удалась:", error));
+}

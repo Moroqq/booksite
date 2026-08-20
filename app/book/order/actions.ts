@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createBookOrder } from "@/lib/orders-db";
-import { sendOrderCreated } from "@/lib/letters";
+import { inBackground, sendOrderCreated } from "@/lib/letters";
 import { getCurrentUser } from "@/lib/customer-auth";
 
 export type OrderSubmission = {
@@ -44,7 +44,7 @@ export async function submitOfflineBookOrder(input: OrderSubmission) {
     delivery: { method: deliveryMethod, address, comment: clean(input.comment || "") || undefined },
     quantity,
   });
-  await sendOrderCreated(order);
+  inBackground(sendOrderCreated(order));
   revalidatePath("/admin");
   revalidatePath("/admin/orders");
   revalidatePath("/account");

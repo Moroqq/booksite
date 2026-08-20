@@ -7,7 +7,7 @@ import { createSeminar, deleteSeminar, updateSeminar, type SeminarInput } from "
 import { createArticle, deleteArticle, updateArticle, type ArticleInput } from "@/lib/articles-db";
 import { getBookOrder, updateBookOrderStatus } from "@/lib/orders-db";
 import { updateSignupStatus } from "@/lib/seminar-signups-db";
-import { sendOrderStatusChanged, sendSignupStatusChanged } from "@/lib/letters";
+import { inBackground, sendOrderStatusChanged, sendSignupStatusChanged } from "@/lib/letters";
 import type { SeminarFormat } from "@/lib/seminars";
 
 const FORMATS: SeminarFormat[] = ["Очный", "Онлайн", "Выездной"];
@@ -125,7 +125,7 @@ export async function confirmOrderPaymentAction(formData: FormData) {
   const order = getBookOrder(id);
   if (order?.status === "payment_pending") {
     const updated = updateBookOrderStatus(id, "preparing");
-    if (updated) await sendOrderStatusChanged(updated);
+    if (updated) inBackground(sendOrderStatusChanged(updated));
   }
   revalidateOrders();
 }
@@ -136,7 +136,7 @@ export async function markOrderShippedAction(formData: FormData) {
   const order = getBookOrder(id);
   if (order && (order.status === "payment_pending" || order.status === "preparing")) {
     const updated = updateBookOrderStatus(id, "shipped");
-    if (updated) await sendOrderStatusChanged(updated);
+    if (updated) inBackground(sendOrderStatusChanged(updated));
   }
   revalidateOrders();
 }
@@ -148,7 +148,7 @@ export async function rejectOrderPaymentAction(formData: FormData) {
   const order = getBookOrder(id);
   if (order?.status === "payment_pending") {
     const updated = updateBookOrderStatus(id, "payment_rejected", reason);
-    if (updated) await sendOrderStatusChanged(updated);
+    if (updated) inBackground(sendOrderStatusChanged(updated));
   }
   revalidateOrders();
 }
@@ -160,20 +160,20 @@ function revalidateSignups() {
 export async function confirmSignupAction(formData: FormData) {
   ensureAccess();
   const updated = updateSignupStatus(text(formData, "id"), "confirmed");
-  if (updated) await sendSignupStatusChanged(updated);
+  if (updated) inBackground(sendSignupStatusChanged(updated));
   revalidateSignups();
 }
 
 export async function declineSignupAction(formData: FormData) {
   ensureAccess();
   const updated = updateSignupStatus(text(formData, "id"), "declined", text(formData, "reason"));
-  if (updated) await sendSignupStatusChanged(updated);
+  if (updated) inBackground(sendSignupStatusChanged(updated));
   revalidateSignups();
 }
 
 export async function cancelSignupAction(formData: FormData) {
   ensureAccess();
   const updated = updateSignupStatus(text(formData, "id"), "cancelled");
-  if (updated) await sendSignupStatusChanged(updated);
+  if (updated) inBackground(sendSignupStatusChanged(updated));
   revalidateSignups();
 }

@@ -5,7 +5,7 @@ import { getCurrentUser } from "@/lib/customer-auth";
 import { getSeminarById } from "@/lib/seminars-db";
 import { createSeminarSignup, hasActiveSignup } from "@/lib/seminar-signups-db";
 import { PROFESSION_LABELS } from "@/lib/schema";
-import { sendSignupCreated } from "@/lib/letters";
+import { inBackground, sendSignupCreated } from "@/lib/letters";
 
 export type SignupSubmission = {
   seminarId: string;
@@ -61,7 +61,7 @@ export async function submitSeminarSignup(input: SignupSubmission) {
     motivation,
   });
 
-  await sendSignupCreated(signup);
+  inBackground(sendSignupCreated(signup));
   revalidatePath("/admin");
   revalidatePath("/admin/signups");
   revalidatePath("/account");
