@@ -23,7 +23,7 @@ export default function BookPreviewSection() {
                 style={{ boxShadow: "20px 20px 60px rgba(0,0,0,0.5), -4px 0 20px rgba(0,0,0,0.3)" }}
               >
                 <Image
-                  src="/images/book-cover.png"
+                  src="/images/book-cover.jpg"
                   alt="Обложка книги «Духовная звукотерапия гласных и согласных звуков»"
                   width={256}
                   height={360}
