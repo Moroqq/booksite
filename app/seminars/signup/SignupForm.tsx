@@ -46,9 +46,13 @@ export default function SignupForm({ seminarId, user }: { seminarId: string; use
     event.preventDefault();
     setError("");
     startTransition(async () => {
-      const result = await submitSeminarSignup({ seminarId, ...values });
-      if (result.ok) { setToken(result.token || ""); setDone(result.number || ""); }
-      else setError(result.message || "Не удалось отправить заявку.");
+      try {
+        const result = await submitSeminarSignup({ seminarId, ...values });
+        if (result.ok) { setToken(result.token || ""); setDone(result.number || ""); }
+        else setError(result.message || "Не удалось отправить заявку.");
+      } catch {
+        setError("Страница устарела — обновите её и оформите заново. Обычно это происходит, если вкладка была открыта во время обновления сайта.");
+      }
     });
   };
 

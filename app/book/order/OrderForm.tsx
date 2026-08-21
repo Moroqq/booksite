@@ -125,10 +125,15 @@ export default function OrderForm({ user }: { user: SiteUser | null }) {
     event.preventDefault();
     setError("");
     startTransition(async () => {
-      const result = await submitOfflineBookOrder(values);
-      if (!result.ok) { setError(result.message || "Не удалось сохранить заказ. Попробуйте ещё раз."); return; }
-      setOrderToken(result.token || "");
-      setConfirmed(true);
+      try {
+        const result = await submitOfflineBookOrder(values);
+        if (!result.ok) { setError(result.message || "Не удалось сохранить заказ. Попробуйте ещё раз."); return; }
+        setOrderToken(result.token || "");
+        setConfirmed(true);
+      } catch {
+        // Вкладка открыта до обновления сайта: код на сервере уже другой.
+        setError("Страница устарела — обновите её и оформите заново. Обычно это происходит, если вкладка была открыта во время обновления сайта.");
+      }
     });
   };
 
